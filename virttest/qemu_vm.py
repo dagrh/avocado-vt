@@ -3684,6 +3684,14 @@ class VM(virt_vm.BaseVM):
                         msg = ("Migrate capability '%s' should be '%s', "
                                "but actual result is '%s'" % (key, state, s))
                         raise exceptions.TestError(msg)
+                    # Also set the capabilties in the clone
+                    clone.monitor.set_migrate_capability(state, key)
+                    s = clone.monitor.get_migrate_capability(key)
+                    if s != state:
+                        msg = ("Migrate capability '%s' should be '%s', "
+                               "but actual result is '%s' (clone)" %
+                              (key, state, s))
+                        raise exceptions.TestError(msg)
 
             threads_before_migrate = self.get_qemu_threads()
 
